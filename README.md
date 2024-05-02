@@ -1,4 +1,4 @@
-# Google Fit Home Assistant Custom Integration
+# Google Fit Home Assistant Custom Integration (8pm mod)
 
 [![GitHub Release][releases-shield]][releases]
 [![HA Installs][installs]](https://analytics.home-assistant.io/custom_integrations.json)
