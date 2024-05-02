@@ -38,6 +38,21 @@ from .const import (
 
 
 # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
+def seconds_since_8pm():
+    now = datetime.now()
+    eight_pm = now.replace(hour=20, minute=0, second=0, microsecond=0)
+
+    if now > eight_pm:
+        # If it's after 8pm on the current day
+        time_difference = now - eight_pm
+    else:
+        # If it's before 8pm on the current day, calculate time since 8pm yesterday
+        eight_pm_yesterday = eight_pm - timedelta(days=1)
+        time_difference = now - eight_pm_yesterday
+
+    return int(time_difference.total_seconds())
+
+
 class Coordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the API."""
 
@@ -48,10 +63,10 @@ class Coordinator(DataUpdateCoordinator):
     _infrequent_interval_multiplier: int
 
     def __init__(
-        self,
-        hass: HomeAssistant,
-        auth: AsyncConfigEntryAuth,
-        config: ConfigEntry,
+            self,
+            hass: HomeAssistant,
+            auth: AsyncConfigEntryAuth,
+            config: ConfigEntry,
     ) -> None:
         """Initialise."""
         self._auth = auth
@@ -100,12 +115,12 @@ class Coordinator(DataUpdateCoordinator):
         start = 0
         if interval_period == 0:
             start = (
-                int(
-                    datetime.combine(
-                        datetime.today().date(), datetime.min.time()
-                    ).timestamp()
-                )
-                * NANOSECONDS_SECONDS_CONVERSION
+                    int(
+                        datetime.combine(
+                            datetime.today().date(), datetime.min.time()
+                        ).timestamp()
+                    )
+                    * NANOSECONDS_SECONDS_CONVERSION
             )
         else:
             start = int(datetime.today().timestamp()) - interval_period
@@ -146,8 +161,8 @@ class Coordinator(DataUpdateCoordinator):
                             do_update = False
 
                     if (
-                        isinstance(entity, SumPointsSensorDescription)
-                        and entity.is_sleep
+                            isinstance(entity, SumPointsSensorDescription)
+                            and entity.is_sleep
                     ):
                         if fetched_sleep:
                             # Only need to call API once to get all different sleep segments
@@ -177,8 +192,8 @@ class Coordinator(DataUpdateCoordinator):
                     """Return a list of sessions for the activity whose end time was in last 24h."""
                     end_time = datetime.utcnow().isoformat() + "Z"
                     start_time = (
-                        datetime.utcnow() - timedelta(days=1)
-                    ).isoformat() + "Z"
+                                         datetime.utcnow() - timedelta(days=1)
+                                 ).isoformat() + "Z"
                     return (
                         service.users()
                         .sessions()
@@ -194,7 +209,7 @@ class Coordinator(DataUpdateCoordinator):
                 for entity in ENTITY_DESCRIPTIONS:
                     if _do_update(entity):
                         if isinstance(entity, SumPointsSensorDescription):
-                            dataset = self._get_interval(entity.period_seconds)
+                            dataset = self._get_interval(seconds_since_8pm())
                             response = await self.hass.async_add_executor_job(
                                 _get_data, entity.source, dataset
                             )
@@ -227,10 +242,10 @@ class Coordinator(DataUpdateCoordinator):
                 # we should readjust this before submitting the data
                 if self.fitness_data is not None:
                     if (
-                        self.fitness_data["sleepSeconds"] is not None
-                        and self.fitness_data["awakeSeconds"] is not None
-                        and self.fitness_data["sleepSeconds"]
-                        >= self.fitness_data["awakeSeconds"]
+                            self.fitness_data["sleepSeconds"] is not None
+                            and self.fitness_data["awakeSeconds"] is not None
+                            and self.fitness_data["sleepSeconds"]
+                            >= self.fitness_data["awakeSeconds"]
                     ):
                         self.fitness_data["sleepSeconds"] -= self.fitness_data[
                             "awakeSeconds"
@@ -238,8 +253,8 @@ class Coordinator(DataUpdateCoordinator):
 
                 # Increment and modulo the counter
                 self.sensor_update_counter = (
-                    self.sensor_update_counter + 1
-                ) % self.infrequent_interval_multiplier
+                                                     self.sensor_update_counter + 1
+                                             ) % self.infrequent_interval_multiplier
 
         except HttpError as err:
             if 400 <= err.status_code < 500:
