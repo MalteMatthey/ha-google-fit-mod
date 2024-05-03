@@ -138,7 +138,7 @@ logical time period, or to just take the latest known value, when the
 sensor is something like height.
 
 > If you're interested in all the underlying logic, it's contained in
-> [api.py](/custom_components/google_fit/api.py).
+> [api.py](/custom_components/google_fit_8pm_mod/api.py).
 
 The behaviour of this integration when there is *no* data available in your account differs
 depending on the sensor category.

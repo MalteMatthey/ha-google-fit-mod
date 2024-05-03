@@ -28,4 +28,4 @@ jobs:
       - name: "Upload the ZIP file to the release"
         uses: softprops/action-gh-release@v2.0.4
         with:
-          files: ${{ github.workspace }}/custom_components/google_fit/google_fit.zip
+          files: ${{ github.workspace }}/custom_components/google_fit_8pm_mod/google_fit_8pm_mod.zip
