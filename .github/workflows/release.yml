@@ -23,7 +23,7 @@ jobs:
         shell: "bash"
         run: |
           cd "${{ github.workspace }}/custom_components/google_fit"
-          zip google_fit.zip -r ./
+          zip google_fit_8pm_mod.zip -r ./
 
       - name: "Upload the ZIP file to the release"
         uses: softprops/action-gh-release@v2.0.4
