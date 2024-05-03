@@ -27,7 +27,7 @@ LOGGER: Logger = getLogger(__package__)
 
 # Base Component Values
 NAME: Final = "Google Fit"
-DOMAIN: Final = "google_fit"
+DOMAIN: Final = "google_fit_8pm_mod"
 MANUFACTURER: Final = "Google, Inc."
 
 # Configuration schema
